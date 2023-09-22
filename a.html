@@ -1,0 +1,150 @@
+require('dotenv').config();
+
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+console.log("first");
+
+const sendSms = (phone, message) => {
+  
+  console.log("first5");
+
+  const client = require('twilio')(accountSid, authToken);
+  client.messages.create({
+       body: message,
+       from: process.env.TWILIO_PHONE_NUMBER,
+       to: phone
+     })
+    .then(message => console.log(message.sid));
+}
+
+module.exports = sendSms;
+
+
+server.js
+
+
+
+app.post('/form', function(req, res) {
+    const {phn , ddate ,v1,v2} = req.body;
+    console.log(phn , ddate ,v1 , v2);
+    const user = {
+        phn,
+        ddate,
+        v1,
+        v2
+    }   
+
+    udb.push(user);
+
+    const welmsg = 'welcome to MRK , '+v1 +v2 + ddate;
+
+    sendSms("+91"+user.phn, welmsg);
+
+
+    res.status(201).send({
+        message: welmsg,
+        data: user
+      })
+
+});
+
+
+
+.env
+
+
+TWILIO_ACCOUNT_SID = "ACc81d1cfc74b658935f0937fdf8ab4f0f"
+TWILIO_AUTH_TOKEN =  "663cabfa967b3f1a9b7ccf1094e391c9"
+TWILIO_PHONE_NUMBER = "+12544142640"
+
+
+
+form.html
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/fontawesome-all.css" rel="stylesheet">
+    <link href="css/swiper.css" rel="stylesheet">
+    <link href="css/magnific-popup.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+    <link href="./login.css" rel="stylesheet">
+    <style>
+        #phn{
+            margin: 10% 0%;
+        }
+        #ddate{
+            margin-bottom: 10%;
+            
+        }
+        #loginButton{
+            margin-right:auto;
+            margin-left: 27%;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <div class="container ">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+        <div class="card1">
+    <form action="/form" method="POST" class="">
+        <input  type="number" id="phn" name="phn">
+        <input type="date" name="ddate" id="ddate">
+        <br>
+        <button onclick="submit()">submit</button>
+    </form>
+</div>
+</div>
+</div>
+</div> -->
+
+<div class="container ">
+                
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+    <div class="card1">
+        <a class="login">Message</a>
+        <form action="/form" method="POST" class="">
+        <div class="inputBox">
+            <input type="number" id="phn" name="phn" required="required">
+            <span class="user">phone number</span>
+        </div>
+        <div class="input-group mb-3 inputBox">
+            <div class="input-group-prepend">
+              <label class="input-group-text " for="inputGroupSelect01">Options</label>
+            </div>
+            <select class="custom-select" id="inputGroupSelect01" required="required">
+              <option selected>Choose...</option>
+              <option id="v1" value="Your order confirm checkin at">Your order confirm checkin at</option>
+              <option id="v2" value="Your ordeer canceled">Your order canceled</option>
+              
+            </select>
+          </div>
+
+        <div class="inputBox">
+            <input type="date" id="ddate" name="ddate" >
+            
+        </div>
+        
+         <button class="enter button" id="loginButton" onclick="submit()">Send</button>
+        </form>
+        </div>
+    </div>
+    </div>
+
+</div>
+</body>
+
+</html>
